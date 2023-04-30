@@ -4,11 +4,14 @@ import NextLink from 'next/link';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { Profile } from '../types/Profile';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
 	const { data: session } = useSession();
+	const profile = session?.user as Profile;
+
 	return (
 		<>
 			<Head>
@@ -36,17 +39,16 @@ export default function Home() {
 								Welcome to <code className={styles.code}>Login and Security Example</code>
 							</p>
 							<br />
-							<br />
-							<Image
-								src={session.user?.picture}
-								alt={session.user?.firstname}
-								width={100}
-								height={100}
-								className={styles.avatar}
-							/>
-							<br />
+							{profile.picture && (
+								<>
+									<br />
+									<Image src={profile.picture} alt={profile.firstname} width={100} height={100} />
+
+									<br />
+								</>
+							)}
 							<span className={styles.name}>
-								{session.user.firstname} {session.user.lastname}
+								{profile.firstname} {profile.lastname}
 							</span>
 						</>
 					) : (

@@ -1,16 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import { Issuer } from 'openid-client';
-
-type Profile = {
-	id: string;
-	firstname: string;
-	lastname: string;
-	email: string;
-	picture: string;
-	username: string;
-	avatarUrl?: string;
-};
+import { Profile } from '../../../types/Profile';
 
 const refreshAccessToken = async (token: JWT): Promise<JWT> => {
 	try {
@@ -107,7 +98,7 @@ export const authOptions: NextAuthOptions = {
 			}
 
 			if (user) {
-				token.user = user;
+				token.user = user as Profile;
 			}
 
 			// Return previous token if the access token has not expired yet
@@ -129,7 +120,7 @@ export const authOptions: NextAuthOptions = {
 			return token;
 		},
 		async session({ session, token }) {
-			session.user = token.user;
+			session.user = token.user as Profile;
 			session.accessToken = token.accessToken;
 			return session;
 		},
